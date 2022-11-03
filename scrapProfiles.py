@@ -3,6 +3,7 @@ import requests
 from tqdm import tqdm
 from random import randrange
 import os
+import pandas as pd
 from dotenv import load_dotenv
 from datetime import datetime
 
@@ -72,3 +73,8 @@ def getProfiles(keywords, cookies, headers):
         else:
             print(response.status_code, keyword, "c'est mort au niveau du ce keyword")
     return totalData
+
+
+def saveResults(data, cols):
+    linkedin_df = pd.DataFrame(data, cols)
+    linkedin_df.to_csv(f'data/{datetime.today().strftime("%Y-%m-%d")}.csv')
