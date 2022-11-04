@@ -184,7 +184,7 @@ def split_company_job(text: str):
     if not isinstance(text, str):
         return pd.Series(["NaN", "NaN"], index=["job", "company"])
     if "Entreprise actuelle" in text:
-        text = re.split("Entreprise actuelle.*:\s", text)
+        text = re.split("Entreprise actuelle.{2}:\s", text)
         text = text[-1]
         if not "chez" in text:
             return pd.Series([text, "NaN"], index=["job", "company"])
