@@ -2,33 +2,41 @@ import time
 import requests
 from tqdm import tqdm
 from random import randrange
-import os
+import json
 import pandas as pd
 from dotenv import load_dotenv
 from datetime import datetime
 
 
-def loadParams():
-    load_dotenv()
-    return os.getenv("COOKIES"), os.getenv("HEADERS")
+def loadCredentials(cookies_path, headers_path):
+    with open(headers_path, "r") as f:
+        headers = json.load(f)
+    with open(cookies_path, "r") as f:
+        cookies = json.load(f)
+    return cookies, headers
 
 
-cookies, headers = loadParams()
+def preparQueries(keywords):
+    q_list = []
+    for q in keywords:
+        # q = "%22" + q + "%22"
+        q_list.append(q.replace(" ", "%20"))
+    return q_list
 
 
-def getProfiles(keywords, cookies, headers):
+def getProfiles(keywords, c, h):
     date = datetime.today().strftime("%Y-%m-%d")
     totalData = []
     for keyword in keywords:
         start = 0
         query = f"https://www.linkedin.com/voyager/api/search/dash/clusters?decorationId=com.linkedin.voyager.dash.deco.search.SearchClusterCollection-167&origin=FACETED_SEARCH&q=all&query=(keywords:{keyword},flagshipSearchIntent:SEARCH_SRP,queryParameters:(currentCompany:List(1951),geoUrn:List(90009659,104246759),resultType:List(PEOPLE)),includeFiltersInResponse:false)&start={start}"
-        response = requests.get(query, cookies=cookies, headers=headers)
+        response = requests.get(query, cookies=c, headers=h)
         if response.status_code == 200:
             number_pages = int(response.json()["data"]["paging"]["total"] // 10)
             print("nombre de page est :", number_pages)
-            for i in tqdm.tqdm(range(0, number_pages + 1)):
+            for i in tqdm(range(0, number_pages + 1)):
                 query = f"https://www.linkedin.com/voyager/api/search/dash/clusters?decorationId=com.linkedin.voyager.dash.deco.search.SearchClusterCollection-167&origin=FACETED_SEARCH&q=all&query=(keywords:{keyword},flagshipSearchIntent:SEARCH_SRP,queryParameters:(currentCompany:List(1951),geoUrn:List(90009659,104246759),resultType:List(PEOPLE)),includeFiltersInResponse:false)&start={start}"
-                response = requests.get(query, cookies=cookies, headers=headers)
+                response = requests.get(query, cookies=c, headers=h)
                 time.sleep(randrange(10))
                 # check if code_status is ok
                 if response.status_code == 200:
@@ -76,5 +84,5 @@ def getProfiles(keywords, cookies, headers):
 
 
 def saveResults(data, cols):
-    linkedin_df = pd.DataFrame(data, cols)
+    linkedin_df = pd.DataFrame(data, columns=cols)
     linkedin_df.to_csv(f'data/{datetime.today().strftime("%Y-%m-%d")}.csv')
