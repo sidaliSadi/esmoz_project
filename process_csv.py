@@ -198,6 +198,9 @@ def split_company_job(text: str):
     if "- " in company:
         company = re.split("-\s.*", company)
         company = company[0]
+
+    company = re.sub("^\s{0,1}", "", company)
+
     return pd.Series([job, company], index=["job", "company"])
 
 
