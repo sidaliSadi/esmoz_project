@@ -4,6 +4,14 @@ import csv
 import re
 
 CSV_REQUIERED_FIELD_NAMES = {"Name", "Summary", "job", "Url", "Keyword", "Date"}
+LIST_OF_FORBIDDEN = {
+    "stage",
+    "stagiare",
+    "apprentissage",
+    "apprenti",
+    "alternance",
+    "alternant",
+}
 
 
 def check_csv_field_names(file_path: str, requiered_field_names: dict):
@@ -64,6 +72,7 @@ def process_csv(file_path: str, out_path: str):
     else:
         df = remove_doublon(file_path)
         df = remove_user(user_name="Utilisateur LinkedIn", df=df)
+        df = remove_by_job(df=df)
         df = split_data_name(df=df)
         df = split_data_summary(df=df)
         df = encode_keyword(df=df)
@@ -183,6 +192,7 @@ def split_company_job(text: str):
     """
     if not isinstance(text, str):
         return pd.Series(["NaN", "NaN"], index=["job", "company"])
+
     if "Entreprise actuelle" in text:
         text = re.split("Entreprise actuelle.{2}:\s", text)
         text = text[-1]
@@ -190,6 +200,7 @@ def split_company_job(text: str):
             return pd.Series([text, "NaN"], index=["job", "company"])
     else:
         return pd.Series(["NaN", "NaN"], index=["job", "company"])
+
     job, *company = re.split("chez", text)
 
     if type(company) == list:
@@ -200,7 +211,6 @@ def split_company_job(text: str):
         company = company[0]
 
     company = re.sub("^\s{0,1}", "", company)
-
     return pd.Series([job, company], index=["job", "company"])
 
 
@@ -261,10 +271,47 @@ def encode_keyword(df):
     return df
 
 
+def is_forbidden(text: str):
+    """
+    Check if a string contains at least one word in the set LIST_OF_FORBIDDEN
+
+    Parameters
+    ----------
+    text: str
+        text to analyze
+
+    Returns
+    -------
+    Boolean
+        True or False wether it contains one or mor of the forbidden words
+    """
+    text = str(text).lower()
+    if any(forbid in text for forbid in LIST_OF_FORBIDDEN):
+        return True
+    return False
+
+
+def remove_by_job(df):
+    """
+    Removes lines of a dataframe containging at least one of the forbidden keyword in the set LIST_OF_FORBIDDEN
+
+    Parameters
+    ----------
+    df: DataFrame
+        source dataframe
+
+    Returns
+    -------
+    DataFrame
+        processed dataframe
+    """
+    return df[df["job"].apply(is_forbidden) == False]
+
+
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    file_path = "./2022-11-04.csv"
-    out_path = file_path.replace(".csv", "_processed.csv")
+    file_path = "./source_data/2022-11-04.csv"
+    out_path = "./processed_data/2022-11-04_processed.csv"
     process_csv(file_path=file_path, out_path=out_path)
