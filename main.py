@@ -1,5 +1,5 @@
 from scrapProfiles import saveResults, getProfiles, loadCredentials, preparQueries
-from send_connections import sendConnection
+from connections import sendConnection
 from process_csv import process_csv
 import logging
 
