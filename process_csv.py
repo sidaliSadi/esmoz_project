@@ -3,7 +3,15 @@ import logging
 import csv
 import re
 
-CSV_REQUIERED_FIELD_NAMES = {"Name", "Summary", "job", "Url", "Keyword", "Date"}
+CSV_REQUIERED_FIELD_NAMES = {
+    "Name",
+    "Summary",
+    "job",
+    "Url",
+    "Keyword",
+    "Date",
+    "invitation",
+}
 LIST_OF_FORBIDDEN = {
     "stage",
     "stagiare",

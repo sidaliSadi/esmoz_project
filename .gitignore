@@ -68,7 +68,8 @@ instance/
 # Scrapy stuff:
 .scrapy
 
-data/
+source_data/
+processed_data/
 credentials/
 
 

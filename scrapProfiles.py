@@ -83,6 +83,7 @@ def getProfiles(keywords, c, h):
     return totalData
 
 
-def saveResults(data, cols):
+def saveResults(data, cols, out_file):
     linkedin_df = pd.DataFrame(data, columns=cols)
-    linkedin_df.to_csv(f'data/{datetime.today().strftime("%Y-%m-%d")}.csv')
+    linkedin_df["invitation"] = 0
+    linkedin_df.to_csv(out_file, index=False)
