@@ -3,3 +3,4 @@ tqdm
 requests
 python-dotenv
 pip-tools
+selenium
