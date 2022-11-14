@@ -71,6 +71,7 @@ instance/
 source_data/
 processed_data/
 credentials/
+relations/
 
 
 # Sphinx documentation
