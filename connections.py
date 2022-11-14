@@ -53,3 +53,28 @@ def sendConnection(file, output_file, cookies, headers, random=20):
         df.to_csv(output_file, index=False)
     else:
         logging.info("tout les utilisateurs de ce fichier ont recu une invitation !")
+
+
+def getConnections(cookies, headers, nbr=1000):
+    params = {
+        "decorationId": "com.linkedin.voyager.dash.deco.web.mynetwork.ConnectionListWithProfile-15",
+        "count": f"{nbr}",
+        "q": "search",
+        "sortType": "RECENTLY_ADDED",
+    }
+    response = requests.get(
+        "https://www.linkedin.com/voyager/api/relationships/dash/connections",
+        params=params,
+        cookies=cookies,
+        headers=headers,
+    )
+    if response.status_code == 200:
+        pd.DataFrame(
+            map(
+                lambda x: ["https://www.linkedin.com/in/" + x.split(":")[-1]],
+                response.json()["data"]["*elements"],
+            ),
+            columns=["Url_relation"],
+        ).to_csv("./relations/matthieu_relations.csv")
+    else:
+        return response.status_code
