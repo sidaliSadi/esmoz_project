@@ -29,21 +29,6 @@ lAPI.sendConnection(invitation_file=INVITATION_FILE)
 # process_csv(file_path=file_path, out_path=out_path)
 
 
-# getConversationIds(
-#     "./browser/",
-#     "matthieu@esmoz.fr",
-#     "Esmoz2022?",
-#     "conversations/converssations_id.csv",
-# )
-
-# sendConnection(
-#     "./processed_data/2022-11-04_thales_invitations.csv",
-#     "./processed_data/2022-11-04_thales_invitations.csv",
-#     cookies,
-#     headers,
-#     random=20,
-# )
-
 # lSelenium = LinkedinSelenium(
 #     "matthieu@esmoz.fr",
 #     "Esmoz2022?",
