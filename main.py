@@ -1,7 +1,5 @@
-from scrapProfiles import saveResults, getProfiles, loadCredentials, preparQueries
-from connections import sendConnection
-from process_csv import process_csv
-from selenium_messages import getConversationIds
+from linkedinAPI import LinkedinAPI
+from linkedinSelenium import LinkedinSelenium
 
 # queries = [
 #     "head of data",
@@ -16,8 +14,10 @@ from selenium_messages import getConversationIds
 # ]
 COOKIES_PATH = "credentials/cookies.json"
 HEADERS_PATH = "credentials/headers.json"
+INVITATION_FILE = "./processed_data/2022-11-04_thales_invitations.csv"
 
-cookies, headers = loadCredentials(COOKIES_PATH, HEADERS_PATH)
+lAPI = LinkedinAPI(COOKIES_PATH, HEADERS_PATH)
+lAPI.sendConnection(invitation_file=INVITATION_FILE)
 # keywords = preparQueries(queries)
 # print(keywords)
 # data = getProfiles(keywords, cookies, headers)
@@ -29,17 +29,25 @@ cookies, headers = loadCredentials(COOKIES_PATH, HEADERS_PATH)
 # process_csv(file_path=file_path, out_path=out_path)
 
 
-getConversationIds(
-    "./browser/",
-    "matthieu@esmoz.fr",
-    "Esmoz2022?",
-    "conversations/converssations_id.csv",
-)
+# getConversationIds(
+#     "./browser/",
+#     "matthieu@esmoz.fr",
+#     "Esmoz2022?",
+#     "conversations/converssations_id.csv",
+# )
 
-sendConnection(
-    "./processed_data/2022-11-04_thales_invitations.csv",
-    "./processed_data/2022-11-04_thales_invitations.csv",
-    cookies,
-    headers,
-    random=20,
-)
+# sendConnection(
+#     "./processed_data/2022-11-04_thales_invitations.csv",
+#     "./processed_data/2022-11-04_thales_invitations.csv",
+#     cookies,
+#     headers,
+#     random=20,
+# )
+
+# lSelenium = LinkedinSelenium(
+#     "matthieu@esmoz.fr",
+#     "Esmoz2022?",
+#     "./browser/",
+#     "conversations/conversations_id.csv",
+# )
+# lSelenium.getMessagesIds()

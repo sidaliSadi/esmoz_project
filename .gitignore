@@ -74,6 +74,7 @@ credentials/
 relations/
 conversations/
 
+geckodriver.log
 
 # Sphinx documentation
 docs/_build/
