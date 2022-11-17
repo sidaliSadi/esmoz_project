@@ -5,3 +5,4 @@ python-dotenv
 pip-tools
 selenium
 bs4
+lxml

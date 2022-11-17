@@ -72,6 +72,7 @@ source_data/
 processed_data/
 credentials/
 relations/
+conversations/
 
 
 # Sphinx documentation

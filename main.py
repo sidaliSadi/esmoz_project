@@ -1,7 +1,7 @@
 from scrapProfiles import saveResults, getProfiles, loadCredentials, preparQueries
 from connections import sendConnection
 from process_csv import process_csv
-import logging
+from selenium_messages import getConversationIds
 
 # queries = [
 #     "head of data",
@@ -22,11 +22,19 @@ cookies, headers = loadCredentials(COOKIES_PATH, HEADERS_PATH)
 # print(keywords)
 # data = getProfiles(keywords, cookies, headers)
 # saveResults(data, ["Name", "Summary", "job", "Url", "Keyword", "Date"], 'thales.csv')
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 # file_path = "./source_data/2022-11-04_thales.csv"
 # out_path = "./processed_data/2022-11-04_thales.csv"
 # process_csv(file_path=file_path, out_path=out_path)
+
+
+getConversationIds(
+    "./browser/",
+    "matthieu@esmoz.fr",
+    "Esmoz2022?",
+    "conversations/converssations_id.csv",
+)
 
 sendConnection(
     "./processed_data/2022-11-04_thales_invitations.csv",

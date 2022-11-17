@@ -6,7 +6,6 @@ import logging
 
 
 def sendConnection(file, output_file, cookies, headers, random=20):
-
     """
     Input:
         file: csv of linkedin profiles
