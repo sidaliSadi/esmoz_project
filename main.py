@@ -36,3 +36,5 @@ lAPI.sendConnection(invitation_file=INVITATION_FILE)
 #     "conversations/conversations_id.csv",
 # )
 # lSelenium.getMessagesIds()
+
+# lAPI.getConnections()

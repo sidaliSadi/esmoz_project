@@ -159,6 +159,6 @@ class LinkedinAPI:
                     response.json()["data"]["*elements"],
                 ),
                 columns=["Url_relation"],
-            ).to_csv("./relations/matthieu_relations.csv")
+            ).to_csv("./relations/matthieu_relations.csv", index=False)
         else:
             return response.status_code
