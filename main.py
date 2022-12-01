@@ -1,5 +1,7 @@
 from linkedinAPI import LinkedinAPI
 from linkedinSelenium import LinkedinSelenium
+from dotenv import load_dotenv
+import os
 
 # queries = [
 #     "head of data",
@@ -17,24 +19,27 @@ HEADERS_PATH = "credentials/headers.json"
 INVITATION_FILE = "./processed_data/2022-11-04_thales_invitations.csv"
 
 lAPI = LinkedinAPI(COOKIES_PATH, HEADERS_PATH)
-lAPI.sendConnection(invitation_file=INVITATION_FILE)
-# keywords = preparQueries(queries)
-# print(keywords)
-# data = getProfiles(keywords, cookies, headers)
-# saveResults(data, ["Name", "Summary", "job", "Url", "Keyword", "Date"], 'thales.csv')
-# logging.basicConfig(level=logging.DEBUG)
+load_dotenv()
+password = os.getenv("PASSWORD")
+email = os.getenv("EMAIL")
 
-# file_path = "./source_data/2022-11-04_thales.csv"
-# out_path = "./processed_data/2022-11-04_thales.csv"
-# process_csv(file_path=file_path, out_path=out_path)
+if lAPI.login(email, password):
+    # lAPI.sendConnection(invitation_file=INVITATION_FILE, random=4)
+    # keywords = preparQueries(queries)
+    # print(keywords)
+    # data = getProfiles(keywords, cookies, headers)
+    # saveResults(data, ["Name", "Summary", "job", "Url", "Keyword", "Date"], 'thales.csv')
+    # logging.basicConfig(level=logging.DEBUG)
 
+    # file_path = "./source_data/2022-11-04_thales.csv"
+    # out_path = "./processed_data/2022-11-04_thales.csv"
+    # process_csv(file_path=file_path, out_path=out_path)
 
-# lSelenium = LinkedinSelenium(
-#     "matthieu@esmoz.fr",
-#     "Esmoz2022?",
-#     "./browser/",
-#     "conversations/conversations_id.csv",
-# )
-# lSelenium.getMessagesIds()
-
-# lAPI.getConnections()
+    # lSelenium = LinkedinSelenium(
+    #     "matthieu@esmoz.fr",
+    #     "Esmoz2022?",
+    #     "./browser/",
+    #     "conversations/conversations_id.csv",
+    # )
+    # lSelenium.getMessagesIds()
+    lAPI.getConnections()
