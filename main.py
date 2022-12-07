@@ -17,13 +17,23 @@ import os
 COOKIES_PATH = "credentials/cookies.json"
 HEADERS_PATH = "credentials/headers.json"
 INVITATION_FILE = "./processed_data/2022-11-04_thales_invitations.csv"
+CONVERSATIONS_ID = "conversations/conversations_id.csv"
+RESPONSES = "conversations/responses.csv"
 
 lAPI = LinkedinAPI(COOKIES_PATH, HEADERS_PATH)
 load_dotenv()
 password = os.getenv("PASSWORD")
 email = os.getenv("EMAIL")
+# lSelenium = LinkedinSelenium(
+#     "matthieu@esmoz.fr",
+#     "Esmoz2022?",
+#     "./browser/",
+#     "conversations/conversations_id.csv",
+# )
+# lSelenium.getMessagesIds()
 
 if lAPI.login(email, password):
+    lAPI.getMessages(CONVERSATIONS_ID, RESPONSES)
     # lAPI.sendConnection(invitation_file=INVITATION_FILE, random=4)
     # keywords = preparQueries(queries)
     # print(keywords)
@@ -35,11 +45,7 @@ if lAPI.login(email, password):
     # out_path = "./processed_data/2022-11-04_thales.csv"
     # process_csv(file_path=file_path, out_path=out_path)
 
-    # lSelenium = LinkedinSelenium(
-    #     "matthieu@esmoz.fr",
-    #     "Esmoz2022?",
-    #     "./browser/",
-    #     "conversations/conversations_id.csv",
-    # )
-    # lSelenium.getMessagesIds()
-    lAPI.getConnections()
+    #
+    # lAPI.getConnections()
+else:
+    print("Login failed")

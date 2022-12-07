@@ -218,3 +218,54 @@ class LinkedinAPI:
             ).to_csv("./relations/matthieu_relations.csv", index=False)
         else:
             return response.status_code
+
+    def getMessages(self, id_conversations_path, responses_path):
+        id_conversations_df = pd.read_csv(id_conversations_path)
+        response_df = pd.read_csv(responses_path)
+        id_conversations_df = id_conversations_df[
+            ~id_conversations_df["ID"].isin(response_df["id_conversation"])
+        ]
+        # id_concersations to list of id_conversations
+        ids = id_conversations_df["ID"].tolist()
+
+        for id in tqdm(ids[:2]):
+            response = requests.get(
+                f"https://www.linkedin.com/voyager/api/voyagerMessagingGraphQL/graphql?queryId=messengerMessages.08934c39ffb80ef0ba3206c05dd01362&variables=(conversationUrn:urn%3Ali%3Amsg_conversation%3A%28urn%3Ali%3Afsd_profile%3AACoAAD7eJgAB86HN-PPLacOIKh5sveuc4KvVpz0%2C{id}%3D%3D%29)",
+                cookies=self.cookies_model,
+                headers=self.headers_model,
+            )
+            time.sleep(1)
+            if response.status_code == 200:
+                messages = []
+                for message in response.json()["included"]:
+                    if (
+                        "reactionSummaries" in message.keys()
+                        and message["*sender"].split(":")[-1]
+                        != "ACoAAD7eJgAB86HN-PPLacOIKh5sveuc4KvVpz0"
+                    ):
+                        messages.append(message)
+                print("len(messages) = {}".format(len(messages)))
+                if len(messages) >= 1:
+                    last_response = messages[-1]
+                    msg = last_response["body"]["text"]
+                    delivered_at_tmsp = last_response["deliveredAt"]
+                    delivered_at_date = datetime.fromtimestamp(
+                        int(last_response["deliveredAt"]) / 1000
+                    ).strftime("%d-%m-%y")
+                    id_contact = last_response["*sender"].split(":")[-1]
+                    # insert line to conversations file
+                    line = [
+                        msg,
+                        delivered_at_date,
+                        delivered_at_tmsp,
+                        id_contact,
+                        id,
+                    ]
+                    response_df.loc[len(response_df)] = line
+                    # save response_df to csv file
+                    response_df.to_csv(
+                        responses_path,
+                        index=False,
+                    )
+            else:
+                print(response.status_code)

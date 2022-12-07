@@ -67,7 +67,7 @@ class LinkedinSelenium:
             )
             if conversation_ids:
                 for conv in conversation_ids:
-                    data.append(conv["href"])
+                    data.append(conv["href"].split("/")[3])
             # save the file as csv
             pd.DataFrame(data, columns=["ID"]).drop_duplicates().to_csv(
                 self.outFile, index=False
