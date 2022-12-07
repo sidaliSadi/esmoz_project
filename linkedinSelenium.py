@@ -54,8 +54,8 @@ class LinkedinSelenium:
                 init = step
                 step += 500
                 end = time.time()
-                # We will scroll for 5 seconds.
-                if round(end - start) > 10:
+                # We will scroll for 50 seconds.
+                if round(end - start) > 50:
                     break
             time.sleep(3)
 
