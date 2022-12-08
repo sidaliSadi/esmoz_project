@@ -83,12 +83,31 @@ def add_new_action(
     return df_action
 
 
-def update_step12(df_action, list_connexion: list):
-    df_action_update = (
-        df_action.groupby(["Id_contact", "Id_conversation"])["Step"].max().reset_index()
+def get_actions_with_max_num(df, step: int):
+    df_action = (
+        df.groupby(["Id_contact", "Id_conversation"])["Step"].max().reset_index()
     )
 
-    df_action_update = df_action_update[df_action_update.Step == 1]
+    df_action = df_action[df_action.Step == step]
+    return df_action
+
+
+def update_step01(id_contact: str, df_action):
+    today = date.today()
+    entry = [today, 1, 0, -1, id_contact]
+    df_action = df_action.append(
+        pd.DataFrame(
+            [entry],
+            columns=["Date", "Step", "Final_step", "Id_conversation", "Id_contact"],
+        ),
+        ignore_index=True,
+    )
+
+    print(df_action)
+
+
+def update_step12(df_action, list_connexion: list):
+    df_action_update = get_actions_with_max_num(df_action, 1)
 
     df_action_update = df_action_update[
         df_action_update["Id_contact"].isin(list_connexion)
@@ -107,7 +126,7 @@ def update_step12(df_action, list_connexion: list):
 
 if __name__ == "__main__":
 
-    file_path_contact = "database/contact_test.csv"
+    file_path_contact = "database/Contact_test.csv"
     file_path_action = "database/Action_test.csv"
     file_path_actual_connexion = "database/Connexion_test.csv"
     # df_contact = pd.read_csv(file_path_contact)
@@ -129,12 +148,13 @@ if __name__ == "__main__":
     # print(df_action)
 
     df_action = pd.read_csv(file_path_action)
-    df_actual_connexions = pd.read_csv(file_path_actual_connexion)
-    list_connexion = df_actual_connexions["Id_contact"].values.tolist()
+    # df_actual_connexions = pd.read_csv(file_path_actual_connexion)
+    # list_connexion = df_actual_connexions["Id_contact"].values.tolist()
 
-    updated_df_action = update_step12(
-        df_action=df_action,
-        list_connexion=list_connexion,
-    )
+    # updated_df_action = update_step12(
+    #     df_action=df_action,
+    #     list_connexion=list_connexion,
+    # )
 
-    print(updated_df_action)
+    # print(updated_df_action)
+    update_step01("new_id", df_action)
