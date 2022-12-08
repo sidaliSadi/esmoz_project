@@ -83,24 +83,58 @@ def add_new_action(
     return df_action
 
 
+def update_step12(df_action, list_connexion: list):
+    df_action_update = (
+        df_action.groupby(["Id_contact", "Id_conversation"])["Step"].max().reset_index()
+    )
+
+    df_action_update = df_action_update[df_action_update.Step == 1]
+
+    df_action_update = df_action_update[
+        df_action_update["Id_contact"].isin(list_connexion)
+    ]
+    df_action_update["Step"] = df_action_update["Step"].replace(1, 2)
+
+    today = date.today()
+    (df_action_update["Final_step"], df_action_update["Date"]) = (0, today)
+
+    df_action_updated = df_action.append(
+        df_action_update, ignore_index=True, verify_integrity=True
+    )
+
+    return df_action_updated
+
+
 if __name__ == "__main__":
 
     file_path_contact = "database/contact_test.csv"
-    file_path_action = "database/action_test.csv"
-    df_contact = pd.read_csv(file_path_contact)
-    df_action = pd.read_csv(file_path_action)
+    file_path_action = "database/Action_test.csv"
+    file_path_actual_connexion = "database/Connexion_test.csv"
+    # df_contact = pd.read_csv(file_path_contact)
+    # df_action = pd.read_csv(file_path_action)
 
-    df_contact, df_action = create_new_entry(
-        first_name="Thomas",
-        last_name="Lépine",
-        full_name="Thomas Lépine",
-        job="chercheur de trésor",
-        company="lepine&co",
-        url="https://lol/zerf8d54sz6e8rf5",
-        action_id="27",
-        df_contact=df_contact,
+    # df_contact, df_action = create_new_entry(
+    #     first_name="Thomas",
+    #     last_name="Lépine",
+    #     full_name="Thomas Lépine",
+    #     job="chercheur de trésor",
+    #     company="lepine&co",
+    #     url="https://lol/zerf8d54sz6e8rf5",
+    #     action_id="27",
+    #     df_contact=df_contact,
+    #     df_action=df_action,
+    # )
+
+    # print(df_contact)
+    # print(df_action)
+
+    df_action = pd.read_csv(file_path_action)
+    df_actual_connexions = pd.read_csv(file_path_actual_connexion)
+    list_connexion = df_actual_connexions["Id_contact"].values.tolist()
+
+    updated_df_action = update_step12(
         df_action=df_action,
+        list_connexion=list_connexion,
     )
 
-    print(df_contact)
-    print(df_action)
+    print(updated_df_action)
