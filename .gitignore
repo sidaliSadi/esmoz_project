@@ -68,9 +68,13 @@ instance/
 # Scrapy stuff:
 .scrapy
 
-data/
+source_data/
+processed_data/
 credentials/
+relations/
+conversations/
 
+geckodriver.log
 
 # Sphinx documentation
 docs/_build/

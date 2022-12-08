@@ -3,7 +3,15 @@ import logging
 import csv
 import re
 
-CSV_REQUIERED_FIELD_NAMES = {"Name", "Summary", "job", "Url", "Keyword", "Date"}
+CSV_REQUIERED_FIELD_NAMES = {
+    "Name",
+    "Summary",
+    "job",
+    "Url",
+    "Keyword",
+    "Date",
+    "invitation",
+}
 LIST_OF_FORBIDDEN = {
     "stage",
     "stagiare",
@@ -306,12 +314,3 @@ def remove_by_job(df):
         processed dataframe
     """
     return df[df["job"].apply(is_forbidden) == False]
-
-
-if __name__ == "__main__":
-
-    logging.basicConfig(level=logging.DEBUG)
-
-    file_path = "./source_data/2022-11-04.csv"
-    out_path = "./processed_data/2022-11-04_processed.csv"
-    process_csv(file_path=file_path, out_path=out_path)
