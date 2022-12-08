@@ -24,17 +24,17 @@ lAPI = LinkedinAPI(COOKIES_PATH, HEADERS_PATH)
 load_dotenv()
 password = os.getenv("PASSWORD")
 email = os.getenv("EMAIL")
-lSelenium = LinkedinSelenium(
-    "matthieu@esmoz.fr",
-    "Esmoz2022?",
-    "./browser/",
-    "conversations/conversations_id.csv",
-)
-lSelenium.getMessagesIds()
+# lSelenium = LinkedinSelenium(
+#     "matthieu@esmoz.fr",
+#     "Esmoz2022?",
+#     "./browser/",
+#     "conversations/conversations_id.csv",
+# )
+# lSelenium.getMessagesIds()
 
-# if lAPI.login(email, password):
-# lAPI.getMessages(CONVERSATIONS_ID, RESPONSES)
-# lAPI.sendConnection(invitation_file=INVITATION_FILE, random=4)
+if lAPI.login(email, password):
+    # lAPI.getMessages(CONVERSATIONS_ID, RESPONSES)
+    lAPI.sendConnection(invitation_file=INVITATION_FILE, random=14)
 # keywords = preparQueries(queries)
 # print(keywords)
 # data = getProfiles(keywords, cookies, headers)
@@ -47,5 +47,5 @@ lSelenium.getMessagesIds()
 
 #
 # lAPI.getConnections()
-# else:
-#     print("Login failed")
+else:
+    print("Login failed")
