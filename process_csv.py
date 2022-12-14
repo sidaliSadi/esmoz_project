@@ -314,3 +314,8 @@ def remove_by_job(df):
         processed dataframe
     """
     return df[df["job"].apply(is_forbidden) == False]
+
+
+def get_id_from_url(url: str):
+    url_id = re.split("/", url)[-1]
+    return pd.Series([url_id], index=["Id"])

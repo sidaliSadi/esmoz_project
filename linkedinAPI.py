@@ -7,6 +7,8 @@ import pandas as pd
 import ast
 from datetime import datetime
 import logging
+from process_csv import split_name, get_id_from_url
+from crud_table import get_actions_with_max_num, update_step01
 
 
 class LinkedinAPI:
@@ -140,15 +142,29 @@ class LinkedinAPI:
                 )
         return totalData
 
-    def saveResults(data, cols, out_file):
-        linkedin_df = pd.DataFrame(data, columns=cols)
-        linkedin_df["invitation"] = 0
-        linkedin_df.to_csv(out_file, index=False)
+    def saveResults(data, cols, out_file_contact, out_file_action):
+        contact_df = pd.DataFrame(data, columns=cols)
+        contact_df[["First_name", "Last_name"]] = contact_df["Name"].apply(split_name)
 
-    def sendConnection(self, invitation_file, random=20):
+        action_df = contact_df["Date"].to_frame()
+        action_df["Id_contact"] = contact_df["Url"].apply(get_id_from_url)
+        action_df["Step"], action_df["Final_step"], action_df["Id_conversation"] = (
+            0,
+            0,
+            -1,
+        )
+
+        contact_df.pop("Date")
+        contact_df.pop("Summary")
+
+        contact_df.to_csv(out_file_contact, index=False)
+        action_df.to_csv(out_file_action, index=False)
+
+    def sendConnection(self, action_file, contact_file, random=20):
         """
         Input:
-            file: csv of linkedin profiles
+            action_file: csv of actions
+            contact_file: csv of linkedin profiles
             output_file: name of file to save the result
             cookies
             headers
@@ -159,14 +175,21 @@ class LinkedinAPI:
         params = {
             "action": "verifyQuotaAndCreate",
         }
-        df = pd.read_csv(invitation_file)
-        random_20 = df[df["invitation"] == 0].sample(random)
+        action_df = pd.read_csv(action_file)
+        action_df = get_actions_with_max_num(action_df, 0)
+        random_20_in_action = action_df.sample(random, replace=True).drop_duplicates()
+
+        contact_df = pd.read_csv(contact_file)
+        random_20 = contact_df.merge(
+            random_20_in_action, left_on=["Id"], right_on=["Id_contact"], how="right"
+        )
+
         if random_20.shape[0] > 0:
             random_20 = random_20.reset_index()
             for index, row in random_20.iterrows():
                 prenom = row["First_name"]
                 url = row["Url"]
-                id = url.split("/")[-1]
+                id = row["Id"]
                 message = f"Bonjour {prenom},\nImpressionné par votre parcours. J'entends parler de vous via notre réseau commun. J'aimerais faire partie de votre réseau pour échanger sur vos projets tech & data.\nCordialement,\nMatthieu"
                 json_data = {
                     "inviteeProfileUrn": f"urn:li:fsd_profile:{id}",
@@ -183,13 +206,13 @@ class LinkedinAPI:
                     print(response.status_code)
                     print(url, index)
                     # update invitation
-                    df.loc[(df["Url"] == url), "invitation"] = 1
+                    update_step01(id, action_df)
                     time.sleep(randrange(20))
                 else:
                     print(response.status_code)
                     break
             # save updated csv file
-            df.to_csv(invitation_file, index=False)
+            action_df.to_csv(action_file, index=False)
         else:
             logging.info(
                 "tout les utilisateurs de ce fichier ont recu une invitation !"
@@ -269,3 +292,22 @@ class LinkedinAPI:
                     )
             else:
                 print(response.status_code)
+
+
+if __name__ == "__main__":
+    linkedin = LinkedinAPI
+    LinkedinAPI.saveResults(
+        [
+            [
+                "Jean Blanc",
+                "summary",
+                "job",
+                "https://lol/123456",
+                "Key word",
+                "08-12-2022",
+            ]
+        ],
+        ["Name", "Summary", "Company", "Url", "Keyword", "Date"],
+        "./contact_test.csv",
+        "./action_test.csv",
+    )
