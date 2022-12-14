@@ -1,4 +1,5 @@
 import re
+import os
 import pandas as pd
 from datetime import date
 
@@ -44,13 +45,13 @@ def add_new_contact(
     new_contact = pd.DataFrame(
         [[contact_id, last_name, first_name, full_name, url, company, job]],
         columns=[
-            "id",
-            "last_name",
-            "first_name",
-            "full_name",
-            "url",
-            "company",
-            "job",
+            "Id",
+            "Last_name",
+            "First_name",
+            "Full_name",
+            "Url",
+            "Company",
+            "Job",
         ],
     )
     df_contact = pd.concat([df_contact, new_contact])
@@ -71,12 +72,12 @@ def add_new_action(
     new_action = pd.DataFrame(
         [[action_id, today, etape, id_conversation, contact_id, etape_finale]],
         columns=[
-            "id",
-            "date",
-            "etape",
-            "id_conversation",
-            "id_contact",
-            "etape_finale",
+            "Id",
+            "Date",
+            "Step",
+            "Id_conversation",
+            "Id_contact",
+            "Final_step",
         ],
     )
     df_action = pd.concat([df_action, new_action])
@@ -94,16 +95,25 @@ def get_actions_with_max_num(df, step: int):
 
 def update_step01(id_contact: str, df_action):
     today = date.today()
-    entry = [today, 1, 0, -1, id_contact]
-    df_action = df_action.append(
-        pd.DataFrame(
-            [entry],
-            columns=["Date", "Step", "Final_step", "Id_conversation", "Id_contact"],
-        ),
-        ignore_index=True,
+    entry = [today, 1, 0, -1, id_contact, id_contact + "_" + str(1)]
+    df_action = pd.concat(
+        [
+            df_action,
+            pd.DataFrame(
+                [entry],
+                columns=[
+                    "Date",
+                    "Step",
+                    "Final_step",
+                    "Id_conversation",
+                    "Id_contact",
+                    "Id",
+                ],
+            ),
+        ],
     )
 
-    print(df_action)
+    return df_action
 
 
 def update_step12(df_action, list_connexion: list):
@@ -126,35 +136,41 @@ def update_step12(df_action, list_connexion: list):
 
 if __name__ == "__main__":
 
-    file_path_contact = "database/Contact_test.csv"
-    file_path_action = "database/Action_test.csv"
+    file_path_contact = "contact/2022-11-04_thales_invitations.csv"
+    file_path_action = "action/Action.csv"
     file_path_actual_connexion = "database/Connexion_test.csv"
-    # df_contact = pd.read_csv(file_path_contact)
-    # df_action = pd.read_csv(file_path_action)
 
-    # df_contact, df_action = create_new_entry(
-    #     first_name="Thomas",
-    #     last_name="Lépine",
-    #     full_name="Thomas Lépine",
-    #     job="chercheur de trésor",
-    #     company="lepine&co",
-    #     url="https://lol/zerf8d54sz6e8rf5",
-    #     action_id="27",
-    #     df_contact=df_contact,
-    #     df_action=df_action,
-    # )
+    df_contact = pd.read_csv(file_path_contact)
 
-    # print(df_contact)
-    # print(df_action)
+    if not os.path.isfile(file_path_action):
+        df_action = new_action = pd.DataFrame(
+            columns=[
+                "Id",
+                "Date",
+                "Step",
+                "Id_conversation",
+                "Id_contact",
+                "Final_step",
+            ]
+        )
+    else:
+        df_action = pd.read_csv(file_path_action)
 
-    df_action = pd.read_csv(file_path_action)
-    # df_actual_connexions = pd.read_csv(file_path_actual_connexion)
-    # list_connexion = df_actual_connexions["Id_contact"].values.tolist()
+    for row in df_contact.iterrows():
+        name = row[1]["Name"]
+        url = row[1]["Url"]
+        contact_id = re.split("/", url)[-1]
+        step = row[1]["invitation"]
+        action_id = contact_id + "_" + str(0)
+        df_action = add_new_action(
+            action_id=action_id,
+            etape=0,
+            id_conversation=-1,
+            contact_id=contact_id,
+            etape_finale=0,
+            df_action=df_action,
+        )
+        if step > 0:
+            df_action = update_step01(id_contact=contact_id, df_action=df_action)
 
-    # updated_df_action = update_step12(
-    #     df_action=df_action,
-    #     list_connexion=list_connexion,
-    # )
-
-    # print(updated_df_action)
-    update_step01("new_id", df_action)
+    df_action.to_csv(path_or_buf=file_path_action, index=False)
