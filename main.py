@@ -34,18 +34,18 @@ email = os.getenv("EMAIL")
 
 if lAPI.login(email, password):
     # lAPI.getMessages(CONVERSATIONS_ID, RESPONSES)
-    lAPI.sendConnection(invitation_file=INVITATION_FILE, random=14)
-# keywords = preparQueries(queries)
-# print(keywords)
-# data = getProfiles(keywords, cookies, headers)
-# saveResults(data, ["Name", "Summary", "job", "Url", "Keyword", "Date"], 'thales.csv')
-# logging.basicConfig(level=logging.DEBUG)
+    #     lAPI.sendConnection(invitation_file=INVITATION_FILE, random=14)
+    # keywords = preparQueries(queries)
+    # print(keywords)
+    # data = getProfiles(keywords, cookies, headers)
+    # saveResults(data, ["Name", "Summary", "job", "Url", "Keyword", "Date"], 'thales.csv')
+    # logging.basicConfig(level=logging.DEBUG)
 
-# file_path = "./source_data/2022-11-04_thales.csv"
-# out_path = "./processed_data/2022-11-04_thales.csv"
-# process_csv(file_path=file_path, out_path=out_path)
+    # file_path = "./source_data/2022-11-04_thales.csv"
+    # out_path = "./processed_data/2022-11-04_thales.csv"
+    # process_csv(file_path=file_path, out_path=out_path)
 
-#
-# lAPI.getConnections()
+    #
+    lAPI.getConnections()
 else:
     print("Login failed")

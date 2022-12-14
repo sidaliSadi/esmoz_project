@@ -292,22 +292,3 @@ class LinkedinAPI:
                     )
             else:
                 print(response.status_code)
-
-
-if __name__ == "__main__":
-    linkedin = LinkedinAPI
-    LinkedinAPI.saveResults(
-        [
-            [
-                "Jean Blanc",
-                "summary",
-                "job",
-                "https://lol/123456",
-                "Key word",
-                "08-12-2022",
-            ]
-        ],
-        ["Name", "Summary", "Company", "Url", "Keyword", "Date"],
-        "./contact_test.csv",
-        "./action_test.csv",
-    )
