@@ -16,7 +16,7 @@ import os
 # ]
 COOKIES_PATH = "credentials/cookies.json"
 HEADERS_PATH = "credentials/headers.json"
-INVITATION_FILE = "./processed_data/2022-11-04_thales_invitations.csv"
+INVITATION_FILE = "./contact/2022-11-04_thales_invitations.csv"
 CONVERSATIONS_ID = "conversations/conversations_id.csv"
 RESPONSES = "conversations/responses.csv"
 
