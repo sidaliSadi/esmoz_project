@@ -5,10 +5,10 @@ from random import randrange
 import json
 import pandas as pd
 import ast
-from datetime import datetime
+from datetime import datetime, date
 import logging
 from process_csv import split_name, get_id_from_url
-from crud_table import get_actions_with_max_num, update_step01
+from crud_table import get_actions_with_max_num, update_step, update_final_step
 
 
 class LinkedinAPI:
@@ -142,9 +142,10 @@ class LinkedinAPI:
                 )
         return totalData
 
-    def saveResults(data, cols, out_file_contact, out_file_action):
-        contact_df = pd.DataFrame(data, columns=cols)
+    def saveResults(totalData, cols, out_file_contact, out_file_action):
+        contact_df = pd.DataFrame(totalData, columns=cols)
         contact_df[["First_name", "Last_name"]] = contact_df["Name"].apply(split_name)
+        contact_df["Sent_mail"] = 0
 
         action_df = contact_df["Date"].to_frame()
         action_df["Id_contact"] = contact_df["Url"].apply(get_id_from_url)
@@ -189,10 +190,10 @@ class LinkedinAPI:
             for index, row in random_20.iterrows():
                 prenom = row["First_name"]
                 url = row["Url"]
-                id = row["Id"]
+                contact_id = row["Id"]
                 message = f"Bonjour {prenom},\nImpressionné par votre parcours. J'entends parler de vous via notre réseau commun. J'aimerais faire partie de votre réseau pour échanger sur vos projets tech & data.\nCordialement,\nMatthieu"
                 json_data = {
-                    "inviteeProfileUrn": f"urn:li:fsd_profile:{id}",
+                    "inviteeProfileUrn": f"urn:li:fsd_profile:{contact_id}",
                     "customMessage": message,
                 }
                 response = requests.post(
@@ -205,8 +206,14 @@ class LinkedinAPI:
                 if response:
                     print(response.status_code)
                     print(url, index)
+
                     # update invitation
-                    update_step01(id, action_df)
+                    update_step(
+                        date=date.today(),
+                        id_contact=contact_id,
+                        df_action=action_df,
+                        actual_step=0,
+                    )
                     time.sleep(randrange(20))
                 else:
                     print(response.status_code)
@@ -252,6 +259,7 @@ class LinkedinAPI:
         ]
         # id_conversations to list of id_conversations
         ids = id_conversations_df["ID"].tolist()
+        df_final_step = pd.DataFrame(columns=[["Id_contact", "Date"]])
 
         for id in tqdm(ids):
             response = requests.get(
@@ -286,7 +294,12 @@ class LinkedinAPI:
                         id_contact,
                         id,
                     ]
+
                     response_df.loc[len(response_df)] = line
+                    df_final_step.loc[len(df_final_step)] = [
+                        id_contact,
+                        delivered_at_date,
+                    ]
                     # save response_df to csv file
                     response_df.to_csv(
                         responses_path,
@@ -294,3 +307,5 @@ class LinkedinAPI:
                     )
             else:
                 print(response.status_code)
+
+        return df_final_step
