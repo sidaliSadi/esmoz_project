@@ -127,21 +127,14 @@ def update_step12(df_action, list_connexion: list):
     today = date.today()
     (df_action_update["Final_step"], df_action_update["Date"]) = (0, today)
 
-    df_action_updated = df_action.append(
-        df_action_update, ignore_index=True, verify_integrity=True
+    df_action_updated = pd.concat(
+        [df_action, df_action_update], verify_integrity=True, ignore_index=True
     )
 
     return df_action_updated
 
 
-if __name__ == "__main__":
-
-    file_path_contact = "contact/2022-11-04_thales_invitations.csv"
-    file_path_action = "action/Action.csv"
-    file_path_actual_connexion = "database/Connexion_test.csv"
-
-    df_contact = pd.read_csv(file_path_contact)
-
+def get_action_from_contact_invitation_file(file_path_action, df_contact):
     if not os.path.isfile(file_path_action):
         df_action = new_action = pd.DataFrame(
             columns=[
@@ -157,7 +150,6 @@ if __name__ == "__main__":
         df_action = pd.read_csv(file_path_action)
 
     for row in df_contact.iterrows():
-        name = row[1]["Name"]
         url = row[1]["Url"]
         contact_id = re.split("/", url)[-1]
         step = row[1]["invitation"]
@@ -173,4 +165,18 @@ if __name__ == "__main__":
         if step > 0:
             df_action = update_step01(id_contact=contact_id, df_action=df_action)
 
+    return df_action
+
+
+if __name__ == "__main__":
+
+    file_path_contact = "contact/2022-11-04_thales_invitations.csv"
+    file_path_action = "action/Action.csv"
+    file_path_actual_connexion = "database/Connexion_test.csv"
+
+    df_contact = pd.read_csv(file_path_contact)
+
+    df_action = get_action_from_contact_invitation_file(
+        file_path_action=file_path_action, df_contact=df_contact
+    )
     df_action.to_csv(path_or_buf=file_path_action, index=False)

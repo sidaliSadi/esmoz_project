@@ -232,13 +232,15 @@ class LinkedinAPI:
             headers=self.headers_model,
         )
         if response.status_code == 200:
-            pd.DataFrame(
+            df_connection = pd.DataFrame(
                 map(
                     lambda x: ["https://www.linkedin.com/in/" + x.split(":")[-1]],
                     response.json()["data"]["*elements"],
                 ),
-                columns=["Url_relation"],
-            ).to_csv("./relations/matthieu_relations.csv", index=False)
+                columns=["Url"],
+            )
+            df_connection.to_csv("./relations/matthieu_relations.csv", index=False)
+            return df_connection
         else:
             return response.status_code
 
@@ -248,7 +250,7 @@ class LinkedinAPI:
         id_conversations_df = id_conversations_df[
             ~id_conversations_df["ID"].isin(response_df["id_conversation"])
         ]
-        # id_concersations to list of id_conversations
+        # id_conversations to list of id_conversations
         ids = id_conversations_df["ID"].tolist()
 
         for id in tqdm(ids):
