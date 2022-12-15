@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.options import Options
 import pandas as pd
 
 
@@ -16,7 +17,9 @@ class LinkedinSelenium:
 
     def getMessagesIds(self):
         data = []
-        browser = webdriver.Firefox(self.browserLocation)
+        firefox_options = Options()
+        firefox_options.add_argument("--headless")
+        browser = webdriver.Firefox(self.browserLocation, options=firefox_options)
         browser.get("https://www.linkedin.com/checkpoint/lg/sign-in-another-account")
         time.sleep(2)
         username = browser.find_element(By.ID, "username")
