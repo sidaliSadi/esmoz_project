@@ -1,42 +1,6 @@
-import re
-import os
 import pandas as pd
-from datetime import date
+from datetime import date, datetime
 from process_csv import get_id_from_url
-
-
-def create_new_entry(
-    first_name: str,
-    last_name: str,
-    full_name: str,
-    job: str,
-    company: str,
-    url: str,
-    action_id: str,
-    df_contact,
-    df_action,
-):
-    contact_id = re.split("/", url)[-1]
-    df_contact = add_new_contact(
-        contact_id=contact_id,
-        last_name=last_name,
-        first_name=first_name,
-        full_name=full_name,
-        url=url,
-        company=company,
-        job=job,
-        df_contact=df_contact,
-    )
-    df_action = add_new_action(
-        action_id=action_id,
-        step=0,
-        id_conversation="null",
-        contact_id=contact_id,
-        final_step=0,
-        df_action=df_action,
-    )
-
-    return df_contact, df_action
 
 
 def add_new_contact(
@@ -89,12 +53,15 @@ def add_new_action(
     contact_id: str,
     final_step: int,
     df_action,
+    action_date=None,
 ):
-    today = date.today()
-    # dd-mm-YY
-    today = today.strftime("%d-%m-%Y")
+    if action_date is None:
+        today = date.today()
+        # dd-mm-YY
+        action_date = today.strftime("%d-%m-%Y")
+
     new_action = pd.DataFrame(
-        [[action_id, today, step, id_conversation, contact_id, final_step]],
+        [[action_id, action_date, step, id_conversation, contact_id, final_step]],
         columns=[
             "Id",
             "Date",
@@ -182,7 +149,7 @@ def update_step(
         return None
 
 
-def update_final_step(df_final_step, df_action, df_contact):
+def update_final_step(df_final_step, df_action):
     df_update_action = get_actions_with_max_num(
         df_action=df_action, step=2, greater_than=True
     )
@@ -206,15 +173,106 @@ def update_final_step(df_final_step, df_action, df_contact):
     return df_action
 
 
-if __name__ == "__main__":
-    # df_final_step = pd.read_csv("test_database/final_step.csv")
-    # df_action_test = pd.read_csv("test_database/action_test.csv")
+class Action:
+    def __init__(
+        self,
+        action_id: str,
+        action_date: datetime.date,
+        step: int,
+        conversation_id: str,
+        contact_id: str,
+        final_step: int,
+    ):
+        self.action_id = action_id
+        self.action_date = action_date
+        self.step = step
+        self.conversation_id = conversation_id
+        self.contact_id = contact_id
+        self.final_step = final_step
 
-    # print(update_final_step(df_final_step=df_final_step, df_action=df_action_test))
+    columns = [
+        "Id",
+        "Date",
+        "Step",
+        "Id_conversation",
+        "Id_contact",
+        "Final_step",
+    ]
 
-    df1 = pd.DataFrame(
-        data=[["thomas", "lépine"], ["charles", "Henri"]], columns=["prenom", "nom"]
-    )
-    df2 = pd.DataFrame(data=[["charles", "Henri"]], columns=["prenom", "nom"])
-    print(df2)
-    print(df1[df1["prenom"].isin(df2["prenom"])])
+    def to_list(self):
+        return [
+            self.action_id,
+            self.action_date,
+            self.step,
+            self.conversation_id,
+            self.contact_id,
+            self.final_step,
+        ]
+
+    def from_list(self, source_list):
+        self.action_id = source_list[0]
+        self.action_date = source_list[1]
+        self.step = source_list[2]
+        self.conversation_id = source_list[3]
+        self.contact_id = source_list[4]
+        self.final_step = source_list[5]
+
+
+class Contact:
+    def __init__(
+        self,
+        contact_id: str,
+        last_name: str,
+        first_name: str,
+        full_name: str,
+        keyword: str,
+        url: str,
+        company: str,
+        job: str,
+        sent_mail: int,
+    ):
+        self.last_name = last_name
+        self.contact_id = contact_id
+        self.first_name = first_name
+        self.full_name = full_name
+        self.keyword = keyword
+        self.url = url
+        self.company = company
+        self.job = job
+        self.sent_mail = sent_mail
+
+    columns = [
+        "Id",
+        "Last_name",
+        "First_name",
+        "Full_name",
+        "Keyword",
+        "Url",
+        "Company",
+        "Job",
+        "Sent_mail",
+    ]
+
+    def to_list(self):
+        return [
+            self.last_name,
+            self.contact_id,
+            self.first_name,
+            self.full_name,
+            self.keyword,
+            self.url,
+            self.company,
+            self.job,
+            self.sent_mail,
+        ]
+
+    def from_list(self, source_list):
+        self.last_name = source_list[0]
+        self.contact_id = source_list[1]
+        self.first_name = source_list[2]
+        self.full_name = source_list[3]
+        self.keyword = source_list[4]
+        self.url = source_list[5]
+        self.company = source_list[6]
+        self.job = source_list[7]
+        self.sent_mail = source_list[8]

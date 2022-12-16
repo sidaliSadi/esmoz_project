@@ -7,8 +7,8 @@ import pandas as pd
 import ast
 from datetime import datetime, date
 import logging
-from process_csv import split_name, get_id_from_url
-from crud_table import get_actions_with_max_num, update_step, update_final_step
+from src.process_csv import split_name, get_id_from_url
+from src.crud_table import get_actions_with_max_num, update_step
 
 
 class LinkedinAPI:
