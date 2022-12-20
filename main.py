@@ -14,11 +14,11 @@ import os
 #     "datalab",
 #     "datafactory",
 # ]
-COOKIES_PATH = "credentials/cookies.json"
-HEADERS_PATH = "credentials/headers.json"
+COOKIES_PATH = "./credentials/cookies.json"
+HEADERS_PATH = "./credentials/headers.json"
 INVITATION_FILE = "./contact/2022-11-04_thales_invitations.csv"
-CONVERSATIONS_ID = "conversations/conversations_id.csv"
-RESPONSES = "conversations/responses.csv"
+CONVERSATIONS_ID = "./conversations/conversations_id.csv"
+RESPONSES = "./conversations/responses.csv"
 
 lAPI = LinkedinAPI(COOKIES_PATH, HEADERS_PATH)
 load_dotenv()
@@ -28,7 +28,7 @@ lSelenium = LinkedinSelenium(
     "matthieu@esmoz.fr",
     "Esmoz2022?",
     "./browser/",
-    "conversations/conversations_id.csv",
+    "./conversations/conversations_id.csv",
 )
 lSelenium.getMessagesIds()
 

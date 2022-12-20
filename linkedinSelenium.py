@@ -19,7 +19,7 @@ class LinkedinSelenium:
         data = []
         firefox_options = Options()
         firefox_options.add_argument("--headless")
-        browser = webdriver.Firefox(self.browserLocation, options=firefox_options)
+        browser = webdriver.Firefox(options=firefox_options)
         browser.get("https://www.linkedin.com/checkpoint/lg/sign-in-another-account")
         time.sleep(2)
         username = browser.find_element(By.ID, "username")
@@ -71,6 +71,7 @@ class LinkedinSelenium:
             if conversation_ids:
                 for conv in conversation_ids:
                     data.append(conv["href"].split("/")[3])
+                    print(conv["href"].split("/")[3])
             # save the file as csv
             pd.DataFrame(data, columns=["ID"]).drop_duplicates().to_csv(
                 self.outFile, index=False
