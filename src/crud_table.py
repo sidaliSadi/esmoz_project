@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import date, datetime
-from process_csv import get_id_from_url
+from .process_csv import get_id_from_url
 
 
 def add_new_contact(
@@ -102,7 +102,7 @@ def update_step(
     df_connexion=None,
 ):
     new_step = actual_step + 1
-    action_id = id_contact + "_" + str(new_step)
+    action_id = str(id_contact) + "_" + str(new_step)
 
     if new_step == 0:
         return add_new_action(

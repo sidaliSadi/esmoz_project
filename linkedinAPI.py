@@ -190,7 +190,7 @@ class LinkedinAPI:
             for index, row in random_20.iterrows():
                 prenom = row["First_name"]
                 url = row["Url"]
-                contact_id = row["Id"]
+                contact_id = row["Id_x"]
                 message = f"Bonjour {prenom},\nImpressionné par votre parcours. J'entends parler de vous via notre réseau commun. J'aimerais faire partie de votre réseau pour échanger sur vos projets tech & data.\nCordialement,\nMatthieu"
                 json_data = {
                     "inviteeProfileUrn": f"urn:li:fsd_profile:{contact_id}",
@@ -217,7 +217,6 @@ class LinkedinAPI:
                     time.sleep(randrange(20))
                 else:
                     print(response.status_code)
-                    break
             # save updated csv file
             action_df.to_csv(action_file, index=False)
         else:

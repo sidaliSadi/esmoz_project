@@ -1,6 +1,6 @@
 from linkedinAPI import *
 import linkedinSelenium
-from crud_table import *
+from .crud_table import *
 
 
 def process_step_0(
@@ -52,24 +52,23 @@ def process_final_step(
     path_file_action,
     id_conversations_path,
     responses_path,
+    email,
+    password,
 ):
 
     df_action = pd.read_csv(path_file_action)
     df_contact = pd.read_csv(path_file_contact)
 
     lSelenium = linkedinSelenium.LinkedinSelenium(
-        "matthieu@esmoz.fr",
-        "Esmoz2022?",
-        "./browser/",
-        "conversations/conversations_id.csv",
+        email,
+        password,
+        id_conversations_path,
     )
     lSelenium.getMessagesIds()
 
     df_final_step = linkedinapi.getMessages(
         id_conversations_path=id_conversations_path, responses_path=responses_path
     )
-    df_action = update_final_step(
-        df_final_step=df_final_step, df_action=df_action, df_contact=df_contact
-    )
+    df_action = update_final_step(df_final_step=df_final_step, df_action=df_action)
 
     df_action.to_csv(path_file_action)
