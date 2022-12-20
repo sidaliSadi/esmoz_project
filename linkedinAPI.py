@@ -208,7 +208,7 @@ class LinkedinAPI:
                     print(url, index)
 
                     # update invitation
-                    update_step(
+                    action_df = update_step(
                         date=date.today(),
                         id_contact=contact_id,
                         df_action=action_df,

@@ -103,6 +103,9 @@ def update_step(
 ):
     new_step = actual_step + 1
     action_id = str(id_contact) + "_" + str(new_step)
+    if id_contact == -1:
+        print("missing contact id in update step")
+        exit(1)
 
     if new_step == 0:
         return add_new_action(
@@ -111,6 +114,7 @@ def update_step(
             id_conversation=id_conversation,
             contact_id=id_contact,
             final_step=final_step,
+            action_date=date,
             df_action=df_action,
         )
     elif new_step == 1:
@@ -120,6 +124,7 @@ def update_step(
             id_conversation=id_conversation,
             contact_id=id_contact,
             final_step=final_step,
+            action_date=date,
             df_action=df_action,
         )
 
