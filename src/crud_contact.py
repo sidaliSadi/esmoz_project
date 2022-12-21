@@ -1,6 +1,4 @@
 import pandas as pd
-from datetime import date, datetime
-from process_csv import get_id_from_url
 
 
 class Contact:

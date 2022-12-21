@@ -2,7 +2,7 @@ import re
 import os
 import pandas as pd
 from datetime import date
-from process_csv import get_id_from_url
+from utils import get_id_from_url
 from crud_table import *
 
 

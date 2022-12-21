@@ -1,4 +1,3 @@
-import pandas as pd
 import os, sys
 from datetime import datetime
 
@@ -7,8 +6,8 @@ parent = os.path.dirname(os.path.dirname(current))
 sys.path.append(parent)
 sys.path.append(parent + "/src")
 
-from src.crud_table import Action
 from src.crud_contact import Contact
+from src.crud_action import Action
 
 list_contact = [
     [
@@ -129,14 +128,14 @@ columns_messages = [
 list_messages = [
     [
         "Bonjour Contact_1, je serais ravi d'échanger avec vous !",
-        datetime.fromtimestamp(1671926400),
+        datetime.fromtimestamp(6671926400),
         1671926400,
         "contact_id_1",
         "conversation_id_1",
     ],
     [
         "Bonjour Contact_2, je serais ravi d'échanger avec vous !",
-        datetime.fromtimestamp(1671226400),
+        datetime.fromtimestamp(7671926400),
         1671226400,
         "contact_id_2",
         "conversation_id_2",
