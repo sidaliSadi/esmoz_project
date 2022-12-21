@@ -113,3 +113,32 @@ new_action = Action(
     "contact_id_new",
     0,
 )
+
+list_connexion = [
+    "https://www.linkedin.com/in/contact_id_1",
+    "https://www.linkedin.com/in/contact_id_4",
+]
+
+columns_messages = [
+    "Msg",
+    "Delivered_at_date",
+    "Delivered_at_tmsp",
+    "Id_contact",
+    "Id_conversation",
+]
+list_messages = [
+    [
+        "Bonjour Contact_1, je serais ravi d'échanger avec vous !",
+        datetime.fromtimestamp(1671926400),
+        1671926400,
+        "contact_id_1",
+        "conversation_id_1",
+    ],
+    [
+        "Bonjour Contact_2, je serais ravi d'échanger avec vous !",
+        datetime.fromtimestamp(1671226400),
+        1671226400,
+        "contact_id_2",
+        "conversation_id_2",
+    ],
+]

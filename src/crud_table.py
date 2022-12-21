@@ -93,8 +93,8 @@ def get_actions_with_max_num(df_action, step: int, greater_than=False):
 
 
 def update_step(
-    date,
     df_action,
+    date=-1,
     id_contact=-1,
     actual_step=-1,
     id_conversation=-1,
@@ -103,11 +103,15 @@ def update_step(
 ):
     new_step = actual_step + 1
     action_id = str(id_contact) + "_" + str(new_step)
+
     if id_contact == -1:
         print("missing contact id in update step")
         exit(1)
 
     if new_step == 0:
+        if date == -1:
+            print("error, invalid date")
+
         return add_new_action(
             action_id=action_id,
             step=new_step,
@@ -118,6 +122,9 @@ def update_step(
             df_action=df_action,
         )
     elif new_step == 1:
+        if date == -1:
+            print("error, invalid date")
+
         return add_new_action(
             action_id=action_id,
             step=new_step,
@@ -141,9 +148,13 @@ def update_step(
             df_action_update["Id_contact"].isin(list_connexion)
         ]
         df_action_update["Step"] = df_action_update["Step"].replace(1, 2)
+        df_action_update["Id"] = df_action_update["Id_contact"].apply(
+            lambda x: x + "_2"
+        )
+        if date == -1:
+            date = date.today()
 
-        today = date.today()
-        (df_action_update["Final_step"], df_action_update["Date"]) = (0, today)
+        (df_action_update["Final_step"], df_action_update["Date"]) = (0, date)
 
         df_action_updated = pd.concat(
             [df_action, df_action_update], verify_integrity=True, ignore_index=True
@@ -171,7 +182,7 @@ def update_final_step(df_final_step, df_action):
     ]
 
     df_update_action["Final_step"] = df_update_action["Final_step"].replace(0, 1)
-    df_update_action["Date"] = df_final_step["Date"]
+    df_update_action["Date"] = df_final_step["Delivered_at_date"]
 
     df_action = df_action[~df_action["Id"].isin(df_update_action["Id"])]
     df_action = pd.concat([df_action, df_update_action])

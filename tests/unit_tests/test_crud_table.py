@@ -14,6 +14,7 @@ from src.crud_table import (
     add_new_action,
     get_actions_with_max_num,
     update_step,
+    update_final_step,
 )
 from src.crud_contact import Contact
 
@@ -112,3 +113,71 @@ def test_update_step():
     )
 
     # for step = 2
+    df_action = result
+
+    expected_output = add_new_action(
+        action_id="contact_id_1_2",
+        step=2,
+        action_date=datetime.fromtimestamp(1671926400),
+        id_conversation="conversation_id_1",
+        contact_id="contact_id_1",
+        final_step=0,
+        df_action=df_action,
+    )
+
+    df_connexion = pd.DataFrame(data=list_connexion, columns=["Url"])
+    result = update_step(
+        date=datetime.fromtimestamp(1671926400),
+        df_action=df_action,
+        id_contact="contact_id_1",
+        actual_step=1,
+        id_conversation="conversation_id_1",
+        df_connexion=df_connexion,
+    )
+
+    assert_frame_equal(
+        expected_output.reset_index(drop=True)[Action.columns],
+        result.reset_index(drop=True)[Action.columns],
+    )
+
+
+def test_update_final_step():
+    df_action = pd.DataFrame(data=list_action, columns=Action.columns)
+    df_final_step = pd.DataFrame(data=list_messages, columns=columns_messages)
+
+    df_action = add_new_action(
+        action_id="contact_id_1_1",
+        step=1,
+        action_date=datetime.fromtimestamp(1671926400),
+        id_conversation="conversation_id_1",
+        contact_id="contact_id_1",
+        final_step=0,
+        df_action=df_action,
+    )
+
+    expected_output = add_new_action(
+        action_id="contact_id_1_2",
+        step=2,
+        action_date=datetime.fromtimestamp(1671926400),
+        id_conversation="conversation_id_1",
+        contact_id="contact_id_1",
+        final_step=1,
+        df_action=df_action,
+    )
+
+    df_action = add_new_action(
+        action_id="contact_id_1_2",
+        step=2,
+        action_date=datetime.fromtimestamp(1671926400),
+        id_conversation="conversation_id_1",
+        contact_id="contact_id_1",
+        final_step=0,
+        df_action=df_action,
+    )
+
+    result = update_final_step(df_final_step=df_final_step, df_action=df_action)
+
+    assert_frame_equal(
+        expected_output.reset_index(drop=True)[Action.columns],
+        result.reset_index(drop=True)[Action.columns],
+    )
