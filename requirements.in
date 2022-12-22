@@ -6,3 +6,4 @@ pip-tools
 selenium
 bs4
 lxml
+pydrive
