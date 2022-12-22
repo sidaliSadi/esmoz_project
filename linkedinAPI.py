@@ -7,8 +7,8 @@ import pandas as pd
 import ast
 from datetime import datetime, date
 import logging
-from utils import split_name, get_id_from_url
-from src.crud_table import get_actions_with_max_num, update_step
+from src.utils import split_name, get_id_from_url
+from src.crud_action import Action
 
 
 class LinkedinAPI:
@@ -177,7 +177,7 @@ class LinkedinAPI:
             "action": "verifyQuotaAndCreate",
         }
         action_df = pd.read_csv(action_file)
-        action_df = get_actions_with_max_num(action_df, 0)
+        action_df = Action.get_actions_with_max_num(df_action=action_df, step=0)
         random_20_in_action = action_df.sample(random, replace=True).drop_duplicates()
 
         contact_df = pd.read_csv(contact_file)
@@ -185,6 +185,7 @@ class LinkedinAPI:
             random_20_in_action, left_on=["Id"], right_on=["Id_contact"], how="right"
         )
 
+        new_action = Action()
         if random_20.shape[0] > 0:
             random_20 = random_20.reset_index()
             for index, row in random_20.iterrows():
@@ -208,9 +209,10 @@ class LinkedinAPI:
                     print(url, index)
 
                     # update invitation
-                    action_df = update_step(
-                        date=date.today(),
-                        id_contact=contact_id,
+                    new_action.set_action(
+                        contact_id=contact_id, step=0, action_date=date.today()
+                    )
+                    action_df = new_action.update_step(
                         df_action=action_df,
                         actual_step=0,
                     )

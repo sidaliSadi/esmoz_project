@@ -3,7 +3,8 @@ import os
 import pandas as pd
 from datetime import date
 from utils import get_id_from_url
-from crud_table import *
+from crud_action import Action
+from crud_contact import Contact
 
 
 def update_step01(id_contact: str, df_action):
@@ -30,7 +31,7 @@ def update_step01(id_contact: str, df_action):
 
 
 def update_step12(df_action, list_connexion: list):
-    df_action_update = get_actions_with_max_num(df_action, 1)
+    df_action_update = Action.get_actions_with_max_num(df_action=df_action, step=1)
 
     df_action_update = df_action_update[
         df_action_update["Id_contact"].isin(list_connexion)
@@ -49,7 +50,7 @@ def update_step12(df_action, list_connexion: list):
 
 
 def update_final(df_action, df_responses):
-    df_update_action = get_actions_with_max_num(
+    df_update_action = Action.get_actions_with_max_num(
         df_action=df_action, step=2, greater_than=True
     )
     df_update_action = (
@@ -105,21 +106,26 @@ def get_action_from_contact_invitation_file(file_path_action, df_contact):
     else:
         df_action = pd.read_csv(file_path_action)
 
+    new_action = Action()
+
     for row in df_contact.iterrows():
         url = row[1]["Url"]
         contact_id = re.split("/", url)[-1]
         step = row[1]["invitation"]
         action_id = contact_id + "_" + str(0)
-        df_action = add_new_action(
+
+        new_action.set_action(
             action_id=action_id,
             step=0,
             id_conversation=-1,
             contact_id=contact_id,
             final_step=0,
-            df_action=df_action,
+            action_date=date.today(),
         )
+        df_action = new_action.add_new_action(df_action=df_action)
+
         if step > 0:
-            df_action = update_step01(id_contact=contact_id, df_action=df_action)
+            df_action = new_action.update_step(df_action=df_action, actual_step=0)
 
     return df_action
 
@@ -152,7 +158,7 @@ def get_contact_from_contact_invitation_file(file_path_contact, df_contact_invit
         Job = row[1]["job"]
         Name = row[1]["Name"]
 
-        df_contact = add_new_contact(
+        new_contact = Contact(
             contact_id=Contact_id,
             url=Url,
             last_name=Last_name,
@@ -161,8 +167,9 @@ def get_contact_from_contact_invitation_file(file_path_contact, df_contact_invit
             keyword=Keyword,
             job=Job,
             full_name=Name,
-            df_contact=df_contact,
         )
+
+        df_contact = new_contact.add_contact_to_dataframe(df_contact=df_contact)
 
     df_contact.to_csv(file_path_contact, index=False)
 

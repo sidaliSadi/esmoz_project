@@ -70,7 +70,7 @@ new_contact = Contact(
 
 list_action = [
     [
-        "action_id_1",
+        "contact_id_1_0",
         datetime.fromtimestamp(1671926400),
         0,
         "conversation_id_1",
@@ -78,7 +78,7 @@ list_action = [
         0,
     ],
     [
-        "action_id_2",
+        "contact_id_2_0",
         datetime.fromtimestamp(2672926400),
         0,
         "conversation_id_2",
@@ -86,7 +86,15 @@ list_action = [
         0,
     ],
     [
-        "action_id_3",
+        "contact_id_2_1",
+        datetime.fromtimestamp(2672026400),
+        1,
+        "conversation_id_2",
+        "contact_id_2",
+        0,
+    ],
+    [
+        "contact_id_3_0",
         datetime.fromtimestamp(3673936400),
         0,
         "conversation_id_3",
@@ -94,18 +102,42 @@ list_action = [
         0,
     ],
     [
-        "action_id_4",
+        "contact_id_4_0",
         datetime.fromtimestamp(4674926400),
         0,
         "conversation_id_4",
         "contact_id_4",
         0,
     ],
+    [
+        "contact_id_4_1",
+        datetime.fromtimestamp(4624926400),
+        1,
+        "conversation_id_4",
+        "contact_id_4",
+        0,
+    ],
+    [
+        "contact_id_3_1",
+        datetime.fromtimestamp(3673936400),
+        1,
+        "conversation_id_3",
+        "contact_id_3",
+        0,
+    ],
+    [
+        "contact_id_3_2",
+        datetime.fromtimestamp(3673936400),
+        2,
+        "conversation_id_3",
+        "contact_id_3",
+        0,
+    ],
 ]
 
 
 new_action = Action(
-    "action_id_new",
+    "contact_id_new_0",
     datetime.fromtimestamp(8678926400),
     0,
     "conversation_id_new",

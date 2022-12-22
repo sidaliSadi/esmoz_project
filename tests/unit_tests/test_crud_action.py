@@ -2,32 +2,13 @@ import pandas as pd
 import sys, os
 from data_samples import *
 from pandas.testing import assert_frame_equal
-from unittest.mock import MagicMock
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(os.path.dirname(current))
 sys.path.append(parent)
 sys.path.append(parent + "/src")
 
-from src.crud_contact import Contact
 from src.crud_action import Action
-
-from src.crud_table import *
-
-
-def test_add_contact_to_dataframe():
-
-    df_contact = pd.DataFrame(data=list_contact, columns=Contact.columns)
-
-    new_list_contact = list_contact + [new_contact.to_list()]
-    expected_df_contact = pd.DataFrame(new_list_contact, columns=Contact.columns)
-
-    output_df_contact = new_contact.add_contact_to_dataframe(df_contact=df_contact)
-
-    assert_frame_equal(
-        expected_df_contact.reset_index(drop=True),
-        output_df_contact.reset_index(drop=True),
-    )
 
 
 def test_add_new_action():
@@ -109,6 +90,17 @@ def test_update_step():
 
     expected_output = action_to_add.add_new_action(df_action=result)
 
+    action_to_add.set_action(
+        action_id="contact_id_4_2",
+        step=2,
+        action_date=datetime.fromtimestamp(6671926400),
+        conversation_id="conversation_id_4",
+        contact_id="contact_id_4",
+        final_step=0,
+    )
+
+    expected_output = action_to_add.add_new_action(df_action=expected_output)
+
     df_connexion = pd.DataFrame(data=list_connexion, columns=["Url"])
 
     result = Action.update_step(
@@ -117,6 +109,9 @@ def test_update_step():
         df_action=result,
         df_connexion=df_connexion,
     )
+
+    print(expected_output)
+    print(result)
 
     assert_frame_equal(
         expected_output.reset_index(drop=True)[Action.columns].drop(columns=["Date"]),

@@ -1,17 +1,17 @@
 import pandas as pd
 from datetime import date, datetime
-from utils import get_id_from_url
+from src.utils import get_id_from_url
 
 
 class Action:
     def __init__(
         self,
-        action_id: str,
-        action_date: datetime.date,
-        step: int,
-        conversation_id: str,
-        contact_id: str,
-        final_step: int,
+        action_id=-1,
+        action_date=-1,
+        step=-1,
+        conversation_id=-1,
+        contact_id=-1,
+        final_step=0,
     ):
         self.action_id = action_id
         self.action_date = action_date

@@ -1,6 +1,6 @@
 from linkedinAPI import *
 import linkedinSelenium
-from .crud_table import *
+from src.crud_action import Action
 
 
 def process_step_0(
@@ -36,9 +36,7 @@ def process_step_2(linkedinapi: LinkedinAPI, path_file_action):
     df_connexion = linkedinapi.getConnections()
     df_action = pd.read_csv(path_file_action)
 
-    today = date.today()
-    df_action = update_step(
-        date=today,
+    df_action = Action.update_step(
         df_action=df_action,
         actual_step=1,
         df_connexion=df_connexion,
@@ -69,6 +67,8 @@ def process_final_step(
     df_final_step = linkedinapi.getMessages(
         id_conversations_path=id_conversations_path, responses_path=responses_path
     )
-    df_action = update_final_step(df_final_step=df_final_step, df_action=df_action)
+    df_action = Action.update_final_step(
+        df_final_step=df_final_step, df_action=df_action
+    )
 
     df_action.to_csv(path_file_action)
