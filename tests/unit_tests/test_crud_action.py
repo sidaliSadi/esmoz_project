@@ -29,7 +29,7 @@ def test_get_actions_with_max_num():
     df_action = pd.DataFrame(data=list_action, columns=Action.columns)
     action_2_step_3 = Action(
         "action_id_2",
-        datetime.fromtimestamp(8678926400),
+        8678926400,
         3,
         "conversation_id_2",
         "contact_id_2",
@@ -54,7 +54,7 @@ def test_update_step():
     action_to_add = Action(
         action_id="contact_id_1_1",
         step=1,
-        action_date=datetime.fromtimestamp(1671926400),
+        action_date=1671926400,
         conversation_id="conversation_id_1",
         contact_id="contact_id_1",
         final_step=0,
@@ -65,7 +65,7 @@ def test_update_step():
     action_to_add.set_action(
         action_id="contact_id_1_0",
         step=0,
-        action_date=datetime.fromtimestamp(1671926400),
+        action_date=1671926400,
         conversation_id="conversation_id_1",
         contact_id="contact_id_1",
         final_step=0,
@@ -82,7 +82,7 @@ def test_update_step():
     action_to_add.set_action(
         action_id="contact_id_1_2",
         step=2,
-        action_date=datetime.fromtimestamp(6671926400),
+        action_date=6671926400,
         conversation_id="conversation_id_1",
         contact_id="contact_id_1",
         final_step=0,
@@ -93,7 +93,7 @@ def test_update_step():
     action_to_add.set_action(
         action_id="contact_id_4_2",
         step=2,
-        action_date=datetime.fromtimestamp(6671926400),
+        action_date=6671926400,
         conversation_id="conversation_id_4",
         contact_id="contact_id_4",
         final_step=0,
@@ -110,12 +110,33 @@ def test_update_step():
         df_connexion=df_connexion,
     )
 
-    print(expected_output)
-    print(result)
+    assert_frame_equal(
+        expected_output[Action.columns]
+        .drop(columns=["Date"])
+        .sort_values(by="Id_contact", ascending=False)
+        .reset_index(drop=True),
+        result[Action.columns]
+        .drop(columns=["Date"])
+        .sort_values(by="Id_contact", ascending=False)
+        .reset_index(drop=True),
+    )
+
+    result = Action.update_step(
+        self=None,
+        actual_step=1,
+        df_action=result,
+        df_connexion=df_connexion,
+    )
 
     assert_frame_equal(
-        expected_output.reset_index(drop=True)[Action.columns].drop(columns=["Date"]),
-        result.reset_index(drop=True)[Action.columns].drop(columns=["Date"]),
+        expected_output[Action.columns]
+        .drop(columns=["Date"])
+        .sort_values(by="Id_contact", ascending=False)
+        .reset_index(drop=True),
+        result[Action.columns]
+        .drop(columns=["Date"])
+        .sort_values(by="Id_contact", ascending=False)
+        .reset_index(drop=True),
     )
 
 
@@ -126,7 +147,7 @@ def test_update_final_step():
     action_to_add = Action(
         action_id="contact_id_1_1",
         step=1,
-        action_date=datetime.fromtimestamp(1671926400),
+        action_date=1671926400,
         conversation_id="conversation_id_1",
         contact_id="contact_id_1",
         final_step=0,
@@ -137,7 +158,7 @@ def test_update_final_step():
     action_to_add.set_action(
         action_id="contact_id_1_2",
         step=2,
-        action_date=datetime.fromtimestamp(6671926400),
+        action_date=6671926400,
         conversation_id="conversation_id_1",
         contact_id="contact_id_1",
         final_step=1,
@@ -148,7 +169,7 @@ def test_update_final_step():
     action_to_add.set_action(
         action_id="contact_id_1_2",
         step=2,
-        action_date=datetime.fromtimestamp(1671926400),
+        action_date=1671926400,
         conversation_id="conversation_id_1",
         contact_id="contact_id_1",
         final_step=0,

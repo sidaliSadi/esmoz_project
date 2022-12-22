@@ -212,7 +212,9 @@ class LinkedinAPI:
 
                     # update invitation
                     new_action.set_action(
-                        contact_id=contact_id, step=0, action_date=date.today()
+                        contact_id=contact_id,
+                        step=0,
+                        action_date=int(datetime.today().timestamp()),
                     )
                     action_df = new_action.update_step(
                         df_action=action_df,

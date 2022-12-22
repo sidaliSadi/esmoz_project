@@ -71,7 +71,7 @@ new_contact = Contact(
 list_action = [
     [
         "contact_id_1_0",
-        datetime.fromtimestamp(1671926400),
+        1671926400,
         0,
         "conversation_id_1",
         "contact_id_1",
@@ -79,7 +79,7 @@ list_action = [
     ],
     [
         "contact_id_2_0",
-        datetime.fromtimestamp(2672926400),
+        2672926400,
         0,
         "conversation_id_2",
         "contact_id_2",
@@ -87,7 +87,7 @@ list_action = [
     ],
     [
         "contact_id_2_1",
-        datetime.fromtimestamp(2672026400),
+        2672026400,
         1,
         "conversation_id_2",
         "contact_id_2",
@@ -95,7 +95,7 @@ list_action = [
     ],
     [
         "contact_id_3_0",
-        datetime.fromtimestamp(3673936400),
+        3673936400,
         0,
         "conversation_id_3",
         "contact_id_3",
@@ -103,7 +103,7 @@ list_action = [
     ],
     [
         "contact_id_4_0",
-        datetime.fromtimestamp(4674926400),
+        4674926400,
         0,
         "conversation_id_4",
         "contact_id_4",
@@ -111,7 +111,7 @@ list_action = [
     ],
     [
         "contact_id_4_1",
-        datetime.fromtimestamp(4624926400),
+        4624926400,
         1,
         "conversation_id_4",
         "contact_id_4",
@@ -119,7 +119,7 @@ list_action = [
     ],
     [
         "contact_id_3_1",
-        datetime.fromtimestamp(3673936400),
+        3673936400,
         1,
         "conversation_id_3",
         "contact_id_3",
@@ -127,7 +127,7 @@ list_action = [
     ],
     [
         "contact_id_3_2",
-        datetime.fromtimestamp(3673936400),
+        3673936400,
         2,
         "conversation_id_3",
         "contact_id_3",
@@ -138,7 +138,7 @@ list_action = [
 
 new_action = Action(
     "contact_id_new_0",
-    datetime.fromtimestamp(8678926400),
+    8678926400,
     0,
     "conversation_id_new",
     "contact_id_new",
@@ -161,14 +161,14 @@ list_messages = [
     [
         "Bonjour Contact_1, je serais ravi d'échanger avec vous !",
         datetime.fromtimestamp(6671926400),
-        1671926400,
+        6671926400,
         "contact_id_1",
         "conversation_id_1",
     ],
     [
         "Bonjour Contact_2, je serais ravi d'échanger avec vous !",
         datetime.fromtimestamp(7671926400),
-        1671226400,
+        7671926400,
         "contact_id_2",
         "conversation_id_2",
     ],

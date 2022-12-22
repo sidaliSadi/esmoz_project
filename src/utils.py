@@ -2,6 +2,7 @@ import pandas as pd
 import logging
 import csv
 import re
+from datetime import datetime
 
 CSV_REQUIERED_FIELD_NAMES = {
     "Name",
@@ -319,3 +320,20 @@ def remove_by_job(df):
 def get_id_from_url(url: str):
     url_id = re.split("/", url)[-1]
     return pd.Series([url_id], index=["Id"])
+
+
+def csv_date_to_timestamp(file_path):
+    df = pd.read_csv(file_path)
+    df["Date"] = df["Date"].apply(lambda x: pd.to_datetime(x))
+    df["Date"] = df["Date"].apply(lambda x: int(x.timestamp()))
+    return df
+
+
+if __name__ == "__main__":
+    df = csv_date_to_timestamp(
+        "/home/lepinet/Documents/projets/esmoz2/esmoz_project/action/Action.csv"
+    )
+    df.to_csv(
+        "/home/lepinet/Documents/projets/esmoz2/esmoz_project/action/Action.csv",
+        index=False,
+    )

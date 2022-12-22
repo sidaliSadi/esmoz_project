@@ -24,7 +24,7 @@ class Action:
         "Id",
         "Date",
         "Step",
-        "conversation_id",
+        "Id_conversation",
         "Id_contact",
         "Final_step",
     ]
@@ -66,7 +66,7 @@ class Action:
     def add_new_action(self, df_action):
 
         if self.action_date is None:
-            self.action_date = date.today()
+            self.action_date = int(datetime.today().timestamp())
 
         new_action = pd.DataFrame(
             [
@@ -92,20 +92,23 @@ class Action:
         return df_action
 
     def get_actions_with_max_num(df_action, step: int, greater_than=False):
-        df_action = (
-            df_action.groupby(
-                ["Id", "Date", "Id_conversation", "Id_contact", "Final_step"]
-            )["Step"]
-            .max()
-            .reset_index()
-        )
+        df_action_cut = df_action.groupby(["Id_contact"])["Step"].max().reset_index()
 
         if not greater_than:
-            df_action = df_action[df_action.Step == step]
+            df_action_cut = df_action_cut[df_action_cut.Step == step]
         else:
-            df_action = df_action[df_action.Step >= step]
+            df_action_cut = df_action_cut[df_action_cut.Step >= step]
 
-        return df_action
+        new_df_action = df_action[
+            df_action["Id_contact"].isin(df_action_cut["Id_contact"])
+        ]
+
+        if not greater_than:
+            new_df_action = new_df_action[new_df_action.Step == step]
+        else:
+            new_df_action = new_df_action[new_df_action.Step >= step]
+
+        return new_df_action
 
     def update_step(
         self,
@@ -137,6 +140,7 @@ class Action:
                 return df_action
 
             df_action_update = Action.get_actions_with_max_num(df_action, 1)
+
             list_connexion = df_connexion["Url"].apply(get_id_from_url)
             list_connexion = list_connexion["Id"].to_list()
 
@@ -150,15 +154,11 @@ class Action:
 
             (df_action_update["Final_step"], df_action_update["Date"]) = (
                 0,
-                date.today(),
+                int(datetime.today().timestamp()),
             )
 
             df_action_updated = pd.concat(
                 [df_action, df_action_update], verify_integrity=True, ignore_index=True
-            )
-
-            df_action_updated["Date"] = df_action_updated["Date"].apply(
-                lambda x: pd.to_datetime(x)
             )
 
             return df_action_updated
@@ -171,7 +171,7 @@ class Action:
         )
         df_update_action = (
             df_update_action.groupby(
-                ["Id", "Date", "Step", "conversation_id", "Id_contact"]
+                ["Id", "Date", "Step", "Id_conversation", "Id_contact"]
             )["Final_step"]
             .max()
             .reset_index()
@@ -182,7 +182,7 @@ class Action:
         ]
 
         df_update_action["Final_step"] = df_update_action["Final_step"].replace(0, 1)
-        df_update_action["Date"] = df_final_step["Delivered_at_date"]
+        df_update_action["Date"] = df_final_step["Delivered_at_tmsp"]
 
         df_action = df_action[~df_action["Id"].isin(df_update_action["Id"])]
         df_action = pd.concat([df_action, df_update_action])

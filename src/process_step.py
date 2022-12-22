@@ -37,11 +37,12 @@ def process_step_2(linkedinapi: LinkedinAPI, path_file_action):
     df_action = pd.read_csv(path_file_action)
 
     df_action = Action.update_step(
-        df_action=df_action,
-        actual_step=1,
-        df_connexion=df_connexion,
+        df_action=df_action, actual_step=1, df_connexion=df_connexion, self=None
     )
-    df_action.to_csv(path_file_action)
+    df_action.to_csv(
+        path_file_action,
+        index=False,
+    )
 
 
 def process_final_step(
@@ -71,4 +72,4 @@ def process_final_step(
         df_final_step=df_final_step, df_action=df_action
     )
 
-    df_action.to_csv(path_file_action)
+    df_action.to_csv(path_file_action, index=False)
