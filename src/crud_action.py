@@ -31,12 +31,12 @@ class Action:
 
     def set_action(
         self,
-        action_id: str,
-        action_date: datetime.date,
-        step: int,
-        conversation_id: str,
         contact_id: str,
-        final_step: int,
+        action_id=-1,
+        action_date=-1,
+        step=-1,
+        conversation_id=-1,
+        final_step=0,
     ):
         self.action_id = action_id
         self.action_date = action_date
@@ -83,7 +83,7 @@ class Action:
                 "Id",
                 "Date",
                 "Step",
-                "conversation_id",
+                "Id_conversation",
                 "Id_contact",
                 "Final_step",
             ],
@@ -94,7 +94,7 @@ class Action:
     def get_actions_with_max_num(df_action, step: int, greater_than=False):
         df_action = (
             df_action.groupby(
-                ["Id", "Date", "conversation_id", "Id_contact", "Final_step"]
+                ["Id", "Date", "Id_conversation", "Id_contact", "Final_step"]
             )["Step"]
             .max()
             .reset_index()

@@ -134,3 +134,4 @@ dmypy.json
 .pyre/
 ./source_data
 ./processed_data
+action/Action copy.csv

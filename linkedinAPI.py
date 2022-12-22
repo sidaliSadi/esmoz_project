@@ -177,8 +177,10 @@ class LinkedinAPI:
             "action": "verifyQuotaAndCreate",
         }
         action_df = pd.read_csv(action_file)
-        action_df = Action.get_actions_with_max_num(df_action=action_df, step=0)
-        random_20_in_action = action_df.sample(random, replace=True).drop_duplicates()
+        action_df_max_0 = Action.get_actions_with_max_num(df_action=action_df, step=0)
+        random_20_in_action = action_df_max_0.sample(
+            random, replace=True
+        ).drop_duplicates()
 
         contact_df = pd.read_csv(contact_file)
         random_20 = contact_df.merge(

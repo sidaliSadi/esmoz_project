@@ -24,7 +24,10 @@ print("Logged in ................")
 print("- * 50")
 print("Sending connection request and update action table ...")
 process_step_1(
-    lAPI, path_file_contact=PATH_FILE_CONTACT, path_file_action=PATH_FILE_ACTION
+    lAPI,
+    path_file_contact=PATH_FILE_CONTACT,
+    path_file_action=PATH_FILE_ACTION,
+    new_connexion_number=2,
 )
 # print("Get relations and update action table ...")
 # process_step_2(lAPI, PATH_FILE_ACTION)
